@@ -4,10 +4,10 @@ let playFor = function (aPerformance) {
     return plays[aPerformance.playID];
 };
 
-let amountFor = function (aPerformance, play) {
+let amountFor = function (aPerformance) {
     let result = 0;
 
-    switch (play.type) {
+    switch (playFor(aPerformance).type) {
     case "tragedy":
         result = 4000;
         if (aPerformance.audience > 30) {
@@ -35,7 +35,7 @@ exports.statement = function(invoice, plays) {
         {style: "currency", currency: "USD",
             minimumFractionDigits: 2 }).format;
     for (let perf of invoice.performances) {
-        let thisAmount = amountFor(perf, playFor(perf));
+        let thisAmount = amountFor(perf);
 
         // add volume credits
         volumeCredits += Math.max(perf.audience - 30, 0);
@@ -43,7 +43,7 @@ exports.statement = function(invoice, plays) {
         if ("comedy" === playFor(perf).type) volumeCredits += Math.floor(perf.audience / 5);
 
         // print line for this order
-        result += `  ${playFor(perf).name}: ${format(thisAmount/100)}\n`;
+            result += `  ${playFor(perf).name}: ${format(thisAmount/100)}\n`;
         totalAmount += thisAmount;
     }
     result += `Amount owed is ${format(totalAmount/100)}\n`;
