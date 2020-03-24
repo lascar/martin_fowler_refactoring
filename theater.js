@@ -56,7 +56,7 @@ let totalAmount = function(invoice) {
     return totalAmount;
 };
 
-exports.statement = function(invoice, plays) {
+let renderPlainText = function(invoice, plays) {
     let result = `Statement for ${invoice.customer}\n`;
     for (let perf of invoice.performances) {
         // print line for this order
@@ -65,4 +65,8 @@ exports.statement = function(invoice, plays) {
     result += `Amount owed is ${usd(totalAmount(invoice))}\n`;
     result += `You earned ${totalVolumeCredits(invoice)} credits\n`;
     return result;
+};
+
+exports.statement = function(invoice, plays) {
+    return renderPlainText(invoice, plays);
 };
