@@ -1,0 +1,14 @@
+var assert = require('assert');
+let plays = require( './plays.json');
+let invoices = require( './invoices.json');
+let theater = require ('./theater.js');
+let expected = `Statement for BigCo\n  Hamlet: $290.00\n  As You Like It: $220.00\n  Othello: $140.00\nAmount owed is $650.00\nYou earned 47 credits\n`
+let result = theater.statement(invoices[0], plays);
+try {
+    assert.equal(expected, result);
+    console.log('Passed');
+} catch (error) {
+    console.error('Failed');
+    console.error(error);
+}
+
