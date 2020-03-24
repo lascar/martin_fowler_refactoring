@@ -48,15 +48,21 @@ let totalVolumeCredits = function(invoice) {
     return volumeCredits;
 };
 
-exports.statement = function(invoice, plays) {
+let totalAmount = function(invoice) {
     let totalAmount = 0;
+    for (let perf of invoice.performances) {
+        totalAmount += amountFor(perf);
+    }
+    return totalAmount;
+};
+
+exports.statement = function(invoice, plays) {
     let result = `Statement for ${invoice.customer}\n`;
     for (let perf of invoice.performances) {
         // print line for this order
-        result += `  ${playFor(perf).name}: ${usd(amountFor(perf))}\n`;
-        totalAmount += amountFor(perf);
+        result += `  ${playFor(perf).name}: ${usd(amountFor(perf))} (${perf.audience} seats)\n`;
     }
-    result += `Amount owed is ${usd(totalAmount)}\n`;
+    result += `Amount owed is ${usd(totalAmount(invoice))}\n`;
     result += `You earned ${totalVolumeCredits(invoice)} credits\n`;
     return result;
 };
