@@ -43,7 +43,7 @@ let usd = function(aNumber) {
 let totalVolumeCredits = function(performances) {
     let result = 0;
     for (let perf of performances) {
-        result += volumeCreditsFor(perf);
+        result += perf.volumeCredits;
     }
     return result;
 };
@@ -62,8 +62,8 @@ let renderPlainText = function(data, plays) {
         // print line for this order
         result += `  ${perf.play.name}: ${usd(perf.amount)} (${perf.audience} seats)\n`;
     }
-    result += `Amount owed is ${usd(totalAmount(data.performances))}\n`;
-    result += `You earned ${totalVolumeCredits(data.performances)} credits\n`;
+    result += `Amount owed is ${usd(data.totalAmount)}\n`;
+    result += `You earned ${data.totalVolumeCredits} credits\n`;
     return result;
 };
 
@@ -71,6 +71,7 @@ let enrichPerformance = function(aPerformance) {
     const result = Object.assign({}, aPerformance)
     result.play = playFor(result);
     result.amount = amountFor(result);
+    result.volumeCredits = volumeCreditsFor(result);
     return result;
 };
 
@@ -78,5 +79,7 @@ exports.statement = function(invoice, plays) {
     const statementData = {};
     statementData.customer = invoice.customer;
     statementData.performances = invoice.performances.map(enrichPerformance);
+    statementData.totalAmount = totalAmount(statementData.performances);
+    statementData.totalVolumeCredits = totalVolumeCredits(statementData.performances);
     return renderPlainText(statementData, plays);
 };
