@@ -41,11 +41,8 @@ let usd = function(aNumber) {
 };
 
 let totalVolumeCredits = function(performances) {
-    let result = 0;
-    for (let perf of performances) {
-        result += perf.volumeCredits;
-    }
-    return result;
+    return performances
+      .reduce((total, p) => total + p.volumeCredits, 0);
 };
 
 let totalAmount = function(performances) {
