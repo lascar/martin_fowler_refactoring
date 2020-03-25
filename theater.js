@@ -50,7 +50,7 @@ let totalAmount = function(performances) {
       .reduce((total, p) => total + p.amount, 0);
 };
 
-let renderPlainText = function(data, plays) {
+let renderPlainText = function(data) {
     let result = `Statement for ${data.customer}\n`;
     for (let perf of data.performances) {
         // print line for this order
@@ -69,11 +69,15 @@ let enrichPerformance = function(aPerformance) {
     return result;
 };
 
-exports.statement = function(invoice, plays) {
+let createStatementData = function(invoice) {
     const statementData = {};
     statementData.customer = invoice.customer;
     statementData.performances = invoice.performances.map(enrichPerformance);
     statementData.totalAmount = totalAmount(statementData.performances);
     statementData.totalVolumeCredits = totalVolumeCredits(statementData.performances);
-    return renderPlainText(statementData, plays);
+    return statementData;
+};
+
+exports.statement = function(invoice) {
+    return renderPlainText(createStatementData(invoice));
 };
