@@ -25,7 +25,14 @@ class PerformanceCalculator {
             throw new Error(`unknown type: ${this.play.type}`);
         }
         return result;
-    }
+    };
+
+    get volumeCredits() {
+        let result = 0;
+        result += Math.max(this.performance.audience - 30, 0);
+        if ("comedy" === this.play.type) result += Math.floor(this.performance.audience / 5);
+        return result;
+    };
 };
 
 module.exports = function (invoice) {
@@ -41,8 +48,8 @@ let enrichPerformance = function(aPerformance) {
     const calculator = new PerformanceCalculator(aPerformance, playFor(aPerformance));
     const result = Object.assign({}, aPerformance)
     result.play = calculator.play;
-    result.amount = amountFor(result);
-    result.volumeCredits = volumeCreditsFor(result);
+    result.amount = calculator.amount;
+    result.volumeCredits = calculator.volumeCredits;
     return result;
 };
 
@@ -55,17 +62,6 @@ let plays = require( './plays.json');
 
 let playFor = function (aPerformance) {
     return plays[aPerformance.playID];
-};
-
-let amountFor = function (aPerformance) {
-    return new PerformanceCalculator(aPerformance, playFor(aPerformance)).amount;
-};
-
-let volumeCreditsFor = function (aPerformance) {
-    let volumeCredits = 0;
-    volumeCredits += Math.max(aPerformance.audience - 30, 0);
-    if ("comedy" === aPerformance.play.type) volumeCredits += Math.floor(aPerformance.audience / 5);
-    return volumeCredits;
 };
 
 let totalVolumeCredits = function(performances) {
