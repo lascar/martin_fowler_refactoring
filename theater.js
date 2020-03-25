@@ -49,11 +49,8 @@ let totalVolumeCredits = function(performances) {
 };
 
 let totalAmount = function(performances) {
-    let totalAmount = 0;
-    for (let perf of performances) {
-        totalAmount += perf.amount;
-    }
-    return totalAmount;
+    return performances
+      .reduce((total, p) => total + p.amount, 0);
 };
 
 let renderPlainText = function(data, plays) {
